@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { ShaderMaterial, TextureLoader } from 'three'
+import { Color, ShaderMaterial, TextureLoader, Vector2 } from 'three'
 import {
   extend,
   Object3DNode,
@@ -16,8 +16,21 @@ import vertexShader from '../shaders/posterVertex.glsl'
 // material
 const ProjectShaderMaterial = shaderMaterial(
   {
-    uTexture: null,
-    uMouse: [1.0, 1.0],
+    uTime: 0,
+
+    uBigWavesElevation: 0.2,
+    uBigWavesFrequency: new Vector2(4, 1.5),
+    uBigWavesSpeed: 0.75,
+
+    uSmallWavesElevation: 0,
+    uSmallWavesFrequency: 3,
+    uSmallWavesSpeed: 0.2,
+    uSmallIterations: 4,
+
+    uDepthColor: new Color('#186691'),
+    uSurfaceColor: new Color('#9bd8ff'),
+    uColorOffset: 0.08,
+    uColorMultiplier: 5,
   },
   vertexShader,
   fragmentShader
@@ -42,21 +55,13 @@ const Poster = () => {
   const image = useLoader(TextureLoader, './testImage.png')
 
   // tick
-  useFrame(({ mouse }) => {
-    const x = (mouse.x * viewport.width) / 4 + 0.5
-    const y = (mouse.y * viewport.height) / 4 + 0.5
-
-    shaderRef.current.uniforms.uMouse = { value: [x, y] }
+  useFrame(({ clock }) => {
+    shaderRef.current.uniforms.uTime.value = clock.elapsedTime
   })
 
-  // effects
-  useEffect(() => {
-    shaderRef.current.uniforms.uTexture = { value: image }
-  }, [])
-
   return (
-    <mesh>
-      <planeGeometry args={[2, 2]} />
+    <mesh rotation={[-Math.PI * 0.5, 0, 0]}>
+      <planeGeometry args={[2, 2, 512, 512]} />
       <projectShaderMaterial ref={shaderRef} transparent />
     </mesh>
   )
