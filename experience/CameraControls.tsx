@@ -25,9 +25,9 @@ const CameraControls = () => {
   const { camera, gl } = useThree()
 
   useEffect(() => {
-    camera.zoom = 3
-    camera.position.setY(2)
-    camera.rotation.set(-0.3, 0, 0)
+    camera.zoom = 5
+    camera.position.setY(1.2)
+    camera.rotation.set(-0.13, 0, 0)
   })
 
   return (
