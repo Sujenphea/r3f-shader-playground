@@ -1,9 +1,9 @@
-import ExperienceCanvas from "../experience/ExperienceCanvas";
+import ExperienceCanvas from '../experience/ExperienceCanvas'
 
 export default function Home() {
   return (
-    <div>
+    <div style={{ backgroundColor: 'rgb(6, 10, 17)' }}>
       <ExperienceCanvas />
     </div>
-  );
+  )
 }

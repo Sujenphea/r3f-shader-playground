@@ -11,7 +11,8 @@ void main() {
 
 
     color = textureColor.xyz;
-    color *= 1.0 - length(uMouse - st);
+    
+    float opacity = clamp(1.0 - length(uMouse - st), 0.5, 1.0);
 
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(color, opacity);
 }
