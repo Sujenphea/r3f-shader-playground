@@ -50,7 +50,7 @@ void main()
     vec4 color = vec4(1.0);
     vec2 st = vUv;
 
-    st = tile(st, 10.0);
+    st = tile(st, 30.0);
     
     float cross = makeCross(st, 0.01);
     float verticalCenter = makeCenterVerticalLine(st, 0.01);

@@ -1,9 +1,9 @@
-import { css } from "@emotion/react";
+import { css } from '@emotion/react'
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas } from '@react-three/fiber'
 
-import CameraControls from "./CameraControls";
-import Poster from "./models/Poster";
+import CameraControls from './CameraControls'
+import Poster from './models/Poster'
 
 const ExperienceCanvas = () => {
   // styles
@@ -25,7 +25,7 @@ const ExperienceCanvas = () => {
 
       z-index: 100;
     `,
-  };
+  }
 
   return (
     <div css={styles.container}>
@@ -35,7 +35,7 @@ const ExperienceCanvas = () => {
         <Poster />
       </Canvas>
     </div>
-  );
-};
+  )
+}
 
-export default ExperienceCanvas;
+export default ExperienceCanvas
