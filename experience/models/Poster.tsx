@@ -116,8 +116,8 @@ const Poster = () => {
 
   return (
     <mesh rotation={[-Math.PI * 0.5, 0, 0]} position={[0, 0, 0.5]}>
-      <planeGeometry args={[4, 5, 32, 32]} />
-      <projectShaderMaterial ref={shaderRef} transparent />
+      <planeGeometry args={[4, 10, 32, 32]} />
+      <projectShaderMaterial ref={shaderRef} />
     </mesh>
   )
 }

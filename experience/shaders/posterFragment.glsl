@@ -16,7 +16,8 @@ vec2 rotate2D(vec2 _st, float _angle) {
 }
 
 vec2 tile(vec2 _st, float _zoom) {
-    _st *= _zoom;
+    _st *= vec2(_zoom * 2.0, _zoom);
+
     return fract(_st);
 }
 
@@ -51,13 +52,13 @@ void main()
 
     st = tile(st, 10.0);
     
-    float cross = makeCross(st, 0.02);
+    float cross = makeCross(st, 0.01);
     float verticalCenter = makeCenterVerticalLine(st, 0.01);
     float right = makeRightBorder(st, 0.01);
     
     vec3 borders = vec3(1.0 - right * cross * verticalCenter) * vec3(0.3, 0.3, 0.3);
     
-    color = vec4(vec3(0.99), 1.0) - vec4(borders, 0.15);
+    color = vec4(vec3(0.99), 1.0) - vec4(borders, 0.2);
 
     gl_FragColor = color;
 }
