@@ -100,13 +100,13 @@ const Poster = (props: Props) => {
   }, [])
 
   return (
-    <group rotation={[-Math.PI * 0.5, 0, 0]} position={[0, 0, 0.5]}>
-      <mesh position={[0, 0, -0.01]}>
-        <planeGeometry args={[4, 10, 32, 32]} />
+    <group rotation={[-Math.PI * 0.5, 0, 0]} position={[0, -0.2, 3.5]}>
+      <mesh position={[0, 0, -0.025]}>
+        <planeGeometry args={[10, 4, 32, 32]} />
         <projectShaderMaterial ref={shaderRef} />
       </mesh>
       <lineSegments
-        geometry={new WireframeGeometry(new PlaneGeometry(4, 10, 256, 128))}
+        geometry={new WireframeGeometry(new PlaneGeometry(10, 4, 256, 128))}
       >
         <projectShaderMaterial ref={shaderWireframeRef} />
       </lineSegments>

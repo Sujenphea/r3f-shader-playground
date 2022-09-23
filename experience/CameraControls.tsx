@@ -24,12 +24,6 @@ const CameraControls = () => {
   // hooks
   const { camera, gl } = useThree()
 
-  useEffect(() => {
-    camera.zoom = 5
-    camera.position.setY(1.2)
-    camera.rotation.set(-0.13, 0, 0)
-  })
-
   return (
     <orbitControls
       ref={controls}
