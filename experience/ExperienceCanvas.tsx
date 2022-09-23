@@ -4,7 +4,8 @@ import { Canvas } from '@react-three/fiber'
 import { Color, Vector2 } from 'three'
 
 import CameraControls from './CameraControls'
-import Poster from './models/Poster'
+
+import PosterWave from './experiments/posterWave'
 
 const ExperienceCanvas = () => {
   // styles
@@ -33,7 +34,7 @@ const ExperienceCanvas = () => {
       <Canvas dpr={[1, 2]} linear>
         <CameraControls />
 
-        <Poster
+        <PosterWave
           uBigWavesElevation={0.02}
           uBigWavesFrequency={new Vector2(10, 0)}
           uBigWavesSpeed={3}
