@@ -1,4 +1,5 @@
 uniform float uTime;
+
 uniform float uBigWavesElevation;
 uniform vec2 uBigWavesFrequency;
 uniform float uBigWavesSpeed;
@@ -7,9 +8,6 @@ uniform float uSmallWavesElevation;
 uniform float uSmallWavesFrequency;
 uniform float uSmallWavesSpeed;
 uniform float uSmallIterations;
-
-varying float vElevation;
-varying vec2 vUv;
 
 // Classic Perlin 3D Noise 
 // by Stefan Gustavson
@@ -112,7 +110,4 @@ void main()
     vec4 viewPosition = viewMatrix * modelPosition;
     vec4 projectedPosition = projectionMatrix * viewPosition;
     gl_Position = projectedPosition;
-
-    vElevation = elevation;
-    vUv = uv;
 }

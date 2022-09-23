@@ -4,22 +4,19 @@ import {
   Color,
   PlaneGeometry,
   ShaderMaterial,
-  TextureLoader,
   Vector2,
   WireframeGeometry,
 } from 'three'
-import { extend, Object3DNode, useFrame, useLoader } from '@react-three/fiber'
+import { extend, Object3DNode, useFrame } from '@react-three/fiber'
 import { shaderMaterial } from '@react-three/drei'
 
 import fragmentShader from '../shaders/posterFragment.glsl'
 import vertexShader from '../shaders/posterVertex.glsl'
-import { useControls } from 'leva'
 
 // material
 const ProjectShaderMaterial = shaderMaterial(
   {
     uTime: 0,
-    uTexture: null,
     uColor: new Color('red'),
 
     uBigWavesElevation: 0.1,
@@ -45,95 +42,61 @@ declare global {
   }
 }
 
-const Poster = () => {
+type Props = {
+  uBigWavesElevation: number
+  uBigWavesFrequency: Vector2
+  uBigWavesSpeed: number
+  uSmallWavesElevation: number
+  uSmallWavesFrequency: number
+  uSmallWavesSpeed: number
+  uSmallIterations: number
+  meshColor: Color
+  backgroundColor: Color
+}
+
+const Poster = (props: Props) => {
   // refs
   const shaderRef = useRef<ShaderMaterial>(null!)
   const shaderWireframeRef = useRef<ShaderMaterial>(null!)
 
-  // hooks
-  const image = useLoader(TextureLoader, './testImage2.jpg')
-
-  // gui
-  const {
-    uBigWavesElevation,
-    uBigWavesFrequency,
-    uBigWavesSpeed,
-    uSmallWavesElevation,
-    uSmallWavesFrequency,
-    uSmallWavesSpeed,
-    uSmallIterations,
-  } = useControls({
-    uBigWavesElevation: {
-      value: 0.02,
-      min: 0,
-      max: 1,
-      step: 0.01,
-    },
-    uBigWavesFrequency: { value: [10, 0.0] },
-    uBigWavesSpeed: {
-      value: 3.0,
-      min: 0,
-      max: 10,
-      step: 0.01,
-    },
-    uSmallWavesElevation: {
-      value: 0.08,
-      min: 0,
-      max: 1,
-      step: 0.01,
-    },
-    uSmallWavesFrequency: { value: 0.5, min: 0, max: 1, step: 0.01 },
-    uSmallWavesSpeed: {
-      value: 0,
-      min: 0,
-      max: 1.5,
-      step: 0.01,
-    },
-    uSmallIterations: {
-      value: 2,
-      min: 0,
-      max: 10,
-      step: 1,
-    },
-  })
-
   // tick
   useFrame(({ clock }) => {
     shaderRef.current.uniforms.uTime.value = clock.elapsedTime
-    shaderRef.current.uniforms.uTexture.value = image
 
-    shaderRef.current.uniforms.uBigWavesElevation.value = uBigWavesElevation
-    shaderRef.current.uniforms.uBigWavesFrequency.value = uBigWavesFrequency
-    shaderRef.current.uniforms.uBigWavesSpeed.value = uBigWavesSpeed
-    shaderRef.current.uniforms.uSmallWavesElevation.value = uSmallWavesElevation
-    shaderRef.current.uniforms.uSmallWavesFrequency.value = uSmallWavesFrequency
-    shaderRef.current.uniforms.uSmallWavesSpeed.value = uSmallWavesSpeed
-    shaderRef.current.uniforms.uSmallIterations.value = uSmallIterations
+    shaderRef.current.uniforms.uBigWavesElevation.value =
+      props.uBigWavesElevation
+    shaderRef.current.uniforms.uBigWavesFrequency.value =
+      props.uBigWavesFrequency
+    shaderRef.current.uniforms.uBigWavesSpeed.value = props.uBigWavesSpeed
+    shaderRef.current.uniforms.uSmallWavesElevation.value =
+      props.uSmallWavesElevation
+    shaderRef.current.uniforms.uSmallWavesFrequency.value =
+      props.uSmallWavesFrequency
+    shaderRef.current.uniforms.uSmallWavesSpeed.value = props.uSmallWavesSpeed
+    shaderRef.current.uniforms.uSmallIterations.value = props.uSmallIterations
 
     // wireframe
     shaderWireframeRef.current.uniforms.uTime.value = clock.elapsedTime
-    shaderWireframeRef.current.uniforms.uTexture.value = image
 
     shaderWireframeRef.current.uniforms.uBigWavesElevation.value =
-      uBigWavesElevation
+      props.uBigWavesElevation
     shaderWireframeRef.current.uniforms.uBigWavesFrequency.value =
-      uBigWavesFrequency
-    shaderWireframeRef.current.uniforms.uBigWavesSpeed.value = uBigWavesSpeed
+      props.uBigWavesFrequency
+    shaderWireframeRef.current.uniforms.uBigWavesSpeed.value =
+      props.uBigWavesSpeed
     shaderWireframeRef.current.uniforms.uSmallWavesElevation.value =
-      uSmallWavesElevation
+      props.uSmallWavesElevation
     shaderWireframeRef.current.uniforms.uSmallWavesFrequency.value =
-      uSmallWavesFrequency
+      props.uSmallWavesFrequency
     shaderWireframeRef.current.uniforms.uSmallWavesSpeed.value =
-      uSmallWavesSpeed
+      props.uSmallWavesSpeed
     shaderWireframeRef.current.uniforms.uSmallIterations.value =
-      uSmallIterations
+      props.uSmallIterations
   })
 
   useEffect(() => {
-    shaderRef.current.uniforms.uColor.value = new Color('red')
-    shaderWireframeRef.current.uniforms.uColor.value = new Color(
-      'rgb(237, 237, 237)'
-    )
+    shaderRef.current.uniforms.uColor.value = props.backgroundColor
+    shaderWireframeRef.current.uniforms.uColor.value = props.meshColor
   }, [])
 
   return (
