@@ -1,4 +1,5 @@
 uniform sampler2D uTexture;
+uniform vec3 uColor;
 
 varying float vElevation;
 varying vec2 vUv;
@@ -47,18 +48,5 @@ float makeRightBorder(in vec2 _st, float width) {
 
 void main()
 {
-    vec4 color = vec4(1.0);
-    vec2 st = vUv;
-
-    st = tile(st, 30.0);
-    
-    float cross = makeCross(st, 0.01);
-    float verticalCenter = makeCenterVerticalLine(st, 0.01);
-    float right = makeRightBorder(st, 0.01);
-    
-    vec3 borders = vec3(1.0 - right * cross * verticalCenter) * vec3(0.3, 0.3, 0.3);
-    
-    color = vec4(vec3(0.99), 1.0) - vec4(borders, 0.2);
-
-    gl_FragColor = color;
+    gl_FragColor = vec4(uColor, 1.0);
 }

@@ -6,14 +6,9 @@ import {
   ShaderMaterial,
   TextureLoader,
   Vector2,
+  WireframeGeometry,
 } from 'three'
-import {
-  extend,
-  Object3DNode,
-  useFrame,
-  useLoader,
-  useThree,
-} from '@react-three/fiber'
+import { extend, Object3DNode, useFrame, useLoader } from '@react-three/fiber'
 import { shaderMaterial } from '@react-three/drei'
 
 import fragmentShader from '../shaders/posterFragment.glsl'
@@ -25,6 +20,7 @@ const ProjectShaderMaterial = shaderMaterial(
   {
     uTime: 0,
     uTexture: null,
+    uColor: new Color('red'),
 
     uBigWavesElevation: 0.1,
     uBigWavesFrequency: new Vector2(4, 1.5),
@@ -52,6 +48,7 @@ declare global {
 const Poster = () => {
   // refs
   const shaderRef = useRef<ShaderMaterial>(null!)
+  const shaderWireframeRef = useRef<ShaderMaterial>(null!)
 
   // hooks
   const image = useLoader(TextureLoader, './testImage2.jpg')
@@ -112,13 +109,45 @@ const Poster = () => {
     shaderRef.current.uniforms.uSmallWavesFrequency.value = uSmallWavesFrequency
     shaderRef.current.uniforms.uSmallWavesSpeed.value = uSmallWavesSpeed
     shaderRef.current.uniforms.uSmallIterations.value = uSmallIterations
+
+    // wireframe
+    shaderWireframeRef.current.uniforms.uTime.value = clock.elapsedTime
+    shaderWireframeRef.current.uniforms.uTexture.value = image
+
+    shaderWireframeRef.current.uniforms.uBigWavesElevation.value =
+      uBigWavesElevation
+    shaderWireframeRef.current.uniforms.uBigWavesFrequency.value =
+      uBigWavesFrequency
+    shaderWireframeRef.current.uniforms.uBigWavesSpeed.value = uBigWavesSpeed
+    shaderWireframeRef.current.uniforms.uSmallWavesElevation.value =
+      uSmallWavesElevation
+    shaderWireframeRef.current.uniforms.uSmallWavesFrequency.value =
+      uSmallWavesFrequency
+    shaderWireframeRef.current.uniforms.uSmallWavesSpeed.value =
+      uSmallWavesSpeed
+    shaderWireframeRef.current.uniforms.uSmallIterations.value =
+      uSmallIterations
   })
 
+  useEffect(() => {
+    shaderRef.current.uniforms.uColor.value = new Color('red')
+    shaderWireframeRef.current.uniforms.uColor.value = new Color(
+      'rgb(237, 237, 237)'
+    )
+  }, [])
+
   return (
-    <mesh rotation={[-Math.PI * 0.5, 0, 0]} position={[0, 0, 0.5]}>
-      <planeGeometry args={[4, 10, 32, 32]} />
-      <projectShaderMaterial ref={shaderRef} />
-    </mesh>
+    <group rotation={[-Math.PI * 0.5, 0, 0]} position={[0, 0, 0.5]}>
+      <mesh position={[0, 0, -0.01]}>
+        <planeGeometry args={[4, 10, 32, 32]} />
+        <projectShaderMaterial ref={shaderRef} />
+      </mesh>
+      <lineSegments
+        geometry={new WireframeGeometry(new PlaneGeometry(4, 10, 256, 128))}
+      >
+        <projectShaderMaterial ref={shaderWireframeRef} />
+      </lineSegments>
+    </group>
   )
 }
 
