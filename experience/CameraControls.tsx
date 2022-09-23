@@ -1,9 +1,9 @@
-import { useRef } from "react";
+import { useEffect, useRef } from 'react'
 
-import { extend, ReactThreeFiber, useThree } from "@react-three/fiber";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { extend, ReactThreeFiber, useThree } from '@react-three/fiber'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
-extend({ OrbitControls });
+extend({ OrbitControls })
 
 // https://github.com/pmndrs/react-three-fiber/issues/130
 declare global {
@@ -12,17 +12,17 @@ declare global {
       orbitControls: ReactThreeFiber.Object3DNode<
         OrbitControls,
         typeof OrbitControls
-      >;
+      >
     }
   }
 }
 
 const CameraControls = () => {
   // refs
-  const controls = useRef<OrbitControls | null>(null);
+  const controls = useRef<OrbitControls | null>(null)
 
   // hooks
-  const { camera, gl } = useThree();
+  const { camera, gl } = useThree()
 
   return (
     <orbitControls
@@ -39,7 +39,7 @@ const CameraControls = () => {
       maxPolarAngle={Math.PI * 0.75}
       minPolarAngle={Math.PI * 0.25}
     />
-  );
-};
+  )
+}
 
-export default CameraControls;
+export default CameraControls
