@@ -10,11 +10,11 @@ import {
 import { extend, Object3DNode, useFrame } from '@react-three/fiber'
 import { shaderMaterial } from '@react-three/drei'
 
-import fragmentShader from '../shaders/posterWaveFragment.glsl'
-import vertexShader from '../shaders/posterWaveVertex.glsl'
+import fragmentShader from '../shaders/waveWireframeFragment.glsl'
+import vertexShader from '../shaders/waveWireframeVertex.glsl'
 
 // material
-const ProjectShaderMaterial = shaderMaterial(
+const WaveShaderMaterial = shaderMaterial(
   {
     uTime: 0,
     uColor: new Color('red'),
@@ -32,12 +32,12 @@ const ProjectShaderMaterial = shaderMaterial(
   fragmentShader
 )
 
-extend({ ProjectShaderMaterial })
+extend({ WaveShaderMaterial })
 
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      projectShaderMaterial: Object3DNode<ShaderMaterial, typeof ShaderMaterial>
+      waveShaderMaterial: Object3DNode<ShaderMaterial, typeof ShaderMaterial>
     }
   }
 }
@@ -54,7 +54,7 @@ type Props = {
   backgroundColor: Color
 }
 
-const PosterWave = (props: Props) => {
+const WaveWireframe = (props: Props) => {
   // refs
   const shaderRef = useRef<ShaderMaterial>(null!)
   const shaderWireframeRef = useRef<ShaderMaterial>(null!)
@@ -103,15 +103,15 @@ const PosterWave = (props: Props) => {
     <group rotation={[-Math.PI * 0.5, 0, 0]} position={[0, -0.2, 3.5]}>
       <mesh position={[0, 0, -0.025]}>
         <planeGeometry args={[10, 4, 32, 32]} />
-        <projectShaderMaterial ref={shaderRef} />
+        <waveShaderMaterial ref={shaderRef} />
       </mesh>
       <lineSegments
         geometry={new WireframeGeometry(new PlaneGeometry(10, 4, 256, 128))}
       >
-        <projectShaderMaterial ref={shaderWireframeRef} />
+        <waveShaderMaterial ref={shaderWireframeRef} />
       </lineSegments>
     </group>
   )
 }
 
-export default PosterWave
+export default WaveWireframe

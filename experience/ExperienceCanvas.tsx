@@ -5,7 +5,7 @@ import { Color, Vector2 } from 'three'
 
 import CameraControls from './CameraControls'
 
-import PosterWave from './experiments/posterWave'
+import WaveWireframe from './experiments/WaveWireframe'
 
 const ExperienceCanvas = () => {
   // styles
@@ -34,7 +34,7 @@ const ExperienceCanvas = () => {
       <Canvas dpr={[1, 2]} linear>
         <CameraControls />
 
-        <PosterWave
+        <WaveWireframe
           uBigWavesElevation={0.02}
           uBigWavesFrequency={new Vector2(10, 0)}
           uBigWavesSpeed={3}
