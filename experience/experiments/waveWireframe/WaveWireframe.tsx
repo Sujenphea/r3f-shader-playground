@@ -10,8 +10,8 @@ import {
 import { extend, Object3DNode, useFrame } from '@react-three/fiber'
 import { shaderMaterial } from '@react-three/drei'
 
-import fragmentShader from '../shaders/waveWireframeFragment.glsl'
-import vertexShader from '../shaders/waveWireframeVertex.glsl'
+import fragmentShader from './waveWireframeFragment.glsl'
+import vertexShader from './waveWireframeVertex.glsl'
 
 // material
 const WaveShaderMaterial = shaderMaterial(
@@ -112,6 +112,18 @@ const WaveWireframe = (props: Props) => {
       </lineSegments>
     </group>
   )
+}
+
+WaveWireframe.defaultProps = {
+  uBigWavesElevation: 0.02,
+  uBigWavesFrequency: new Vector2(10, 0),
+  uBigWavesSpeed: 3,
+  uSmallWavesElevation: 0.08,
+  uSmallWavesFrequency: 0.5,
+  uSmallWavesSpeed: 0,
+  uSmallIterations: 2,
+  meshColor: new Color('rgb(237,237,237)'),
+  backgroundColor: new Color('white'),
 }
 
 export default WaveWireframe

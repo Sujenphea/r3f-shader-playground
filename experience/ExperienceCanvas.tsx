@@ -5,7 +5,7 @@ import { Color, Vector2 } from 'three'
 
 import CameraControls from './CameraControls'
 
-import WaveWireframe from './experiments/WaveWireframe'
+import WaveWireframe from './experiments/waveWireframe/WaveWireframe'
 
 const ExperienceCanvas = () => {
   // styles
@@ -34,17 +34,7 @@ const ExperienceCanvas = () => {
       <Canvas dpr={[1, 2]} linear>
         <CameraControls />
 
-        <WaveWireframe
-          uBigWavesElevation={0.02}
-          uBigWavesFrequency={new Vector2(10, 0)}
-          uBigWavesSpeed={3}
-          uSmallWavesElevation={0.08}
-          uSmallWavesFrequency={0.5}
-          uSmallWavesSpeed={0}
-          uSmallIterations={2}
-          meshColor={new Color('rgb(237,237,237)')}
-          backgroundColor={new Color('white')}
-        />
+        <WaveWireframe />
       </Canvas>
     </div>
   )
