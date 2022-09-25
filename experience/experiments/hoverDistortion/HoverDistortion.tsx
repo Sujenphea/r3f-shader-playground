@@ -41,7 +41,7 @@ const HoverDistortion = () => {
   return (
     <group>
       <Plane
-        args={[1, 0.5]}
+        args={[5, 3]}
         material={material(images[0])}
         position={[0, 0, 0]}
       />
