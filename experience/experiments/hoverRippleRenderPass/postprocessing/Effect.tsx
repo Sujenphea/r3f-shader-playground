@@ -4,8 +4,8 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { Effects as EffectsComposer, useTexture } from '@react-three/drei'
 import { ShaderPass } from 'three-stdlib'
 
-import RippleShader from './postprocessing/RippleShader'
-import { RippleRenderer } from './postprocessing/ripple'
+import RippleShader from './RippleShader'
+import { RippleRenderer } from './ripple'
 
 const Effect = () => {
   // refs

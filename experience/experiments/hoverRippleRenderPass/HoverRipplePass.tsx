@@ -2,8 +2,9 @@ import { ShaderMaterial, Texture } from 'three'
 import { extend, Object3DNode } from '@react-three/fiber'
 import { Plane, shaderMaterial, useTexture } from '@react-three/drei'
 
-import fragmentShader from './hoverDistortionFragment.glsl'
-import vertexShader from './hoverDistortionVertex.glsl'
+import fragmentShader from './hoverRipplePassFragment.glsl'
+import vertexShader from './hoverRipplePassVertex.glsl'
+import Effect from './postprocessing/Effect'
 
 // material
 const ImageShaderMaterial = shaderMaterial(
@@ -24,7 +25,7 @@ declare global {
   }
 }
 
-const HoverDistortion = () => {
+const HoverRipplePass = () => {
   // refs
   const images = useTexture(['./testImage.png'])
 
@@ -45,8 +46,9 @@ const HoverDistortion = () => {
         material={material(images[0])}
         position={[0, 0, 0]}
       />
+      <Effect />
     </group>
   )
 }
 
-export default HoverDistortion
+export default HoverRipplePass
