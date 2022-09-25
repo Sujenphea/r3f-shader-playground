@@ -1,10 +1,14 @@
 import { css } from '@emotion/react'
 
+import { Suspense } from 'react'
+
 import { Canvas } from '@react-three/fiber'
 
 import CameraControls from './CameraControls'
 
 import HoverDistortion from './experiments/hoverDistortion/HoverDistortion'
+
+import { Effect } from './experiments/hoverDistortion/Effect'
 
 const ExperienceCanvas = () => {
   // styles
@@ -33,7 +37,11 @@ const ExperienceCanvas = () => {
       <Canvas dpr={[1, 2]} linear>
         <CameraControls />
 
-        <HoverDistortion />
+        <Suspense fallback={null}>
+          <HoverDistortion />
+        </Suspense>
+
+        <Effect />
       </Canvas>
     </div>
   )
