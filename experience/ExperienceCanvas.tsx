@@ -1,11 +1,12 @@
 import { css } from '@emotion/react'
 
+import { Suspense } from 'react'
+
 import { Canvas } from '@react-three/fiber'
-import { Color, Vector2 } from 'three'
 
 import CameraControls from './CameraControls'
 
-import WaveWireframe from './experiments/waveWireframe/WaveWireframe'
+import HoverRipplePass from './experiments/hoverRippleRenderPass/HoverRipplePass'
 
 const ExperienceCanvas = () => {
   // styles
@@ -34,7 +35,9 @@ const ExperienceCanvas = () => {
       <Canvas dpr={[1, 2]} linear>
         <CameraControls />
 
-        <WaveWireframe />
+        <Suspense fallback={null}>
+          <HoverRipplePass />
+        </Suspense>
       </Canvas>
     </div>
   )
