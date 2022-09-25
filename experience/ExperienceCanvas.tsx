@@ -6,7 +6,7 @@ import { Canvas } from '@react-three/fiber'
 
 import CameraControls from './CameraControls'
 
-import HoverRipplePass from './experiments/hoverRippleRenderPass/HoverRipplePass'
+import HoverDistortion from './experiments/hoverDistortion/HoverDistortion'
 
 const ExperienceCanvas = () => {
   // styles
@@ -36,7 +36,7 @@ const ExperienceCanvas = () => {
         <CameraControls />
 
         <Suspense fallback={null}>
-          <HoverRipplePass />
+          <HoverDistortion />
         </Suspense>
       </Canvas>
     </div>
