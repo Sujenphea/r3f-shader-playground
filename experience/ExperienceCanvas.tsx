@@ -7,8 +7,7 @@ import { Canvas } from '@react-three/fiber'
 import CameraControls from './CameraControls'
 
 import HoverDistortion from './experiments/hoverDistortion/HoverDistortion'
-
-import { Effect } from './experiments/hoverDistortion/Effect'
+import Effect from './experiments/hoverDistortion/Effect'
 
 const ExperienceCanvas = () => {
   // styles

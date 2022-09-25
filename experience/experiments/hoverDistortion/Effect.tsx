@@ -1,34 +1,31 @@
-import { forwardRef, useMemo } from 'react'
+import { Effects as EffectsComposer } from '@react-three/drei'
+import { extend, Object3DNode, useThree } from '@react-three/fiber'
+import { FilmPass, UnrealBloomPass } from 'three-stdlib'
 
-import { EffectComposer } from '@react-three/postprocessing'
-import { useControls } from 'leva'
+extend({ UnrealBloomPass, FilmPass })
 
-import { BadTVEffect } from './postprocessing/BadTvBlur'
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      filmPass: Object3DNode<FilmPass, typeof FilmPass>
+    }
+  }
+}
 
-export const Effect = () => {
-  const { distortion, distortion2, speed, rollSpeed } = useControls('BadTV', {
-    distortion: { value: 10.0, min: 0, max: 50.0 },
-    distortion2: { value: 30.0, min: 0, max: 50.0 },
-    speed: { value: 0.05, min: 0, max: 5.0 },
-    rollSpeed: { value: 0, min: 0, max: 5.0 },
-  })
-
-  const BadTV = forwardRef<BadTVEffect>(({}, ref) => {
-    const effect = useMemo(
-      () => new BadTVEffect({ distortion, distortion2, speed, rollSpeed }),
-      [distortion, distortion2, speed, rollSpeed]
-    )
-    return <primitive ref={ref} object={effect} dispose={null} />
-  })
+const Effect = () => {
+  const { size, scene, camera } = useThree()
 
   return (
-    <EffectComposer>
-      <BadTV
-        distortion={distortion}
-        distortion2={distortion2}
-        speed={speed}
-        rollSpeed={rollSpeed}
-      />
-    </EffectComposer>
+    <EffectsComposer
+      multisamping={8}
+      renderIndex={1}
+      disableGamma
+      disableRenderPass
+    >
+      <renderPass scene={scene} camera={camera} />
+      <filmPass args={[0.35, 0.025, 648, false]} />
+    </EffectsComposer>
   )
 }
+
+export default Effect
