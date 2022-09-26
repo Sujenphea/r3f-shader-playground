@@ -1,10 +1,11 @@
-import { ShaderMaterial, Texture, Vector2, Vector3 } from 'three'
+import { useEffect, useRef } from 'react'
+
+import { ShaderMaterial, Vector2 } from 'three'
 import { extend, Object3DNode, ThreeEvent } from '@react-three/fiber'
 import { Plane, shaderMaterial, useTexture } from '@react-three/drei'
 
-import fragmentShader from './hoverDistortionFragment.glsl'
-import vertexShader from './hoverDistortionVertex.glsl'
-import { useEffect, useRef } from 'react'
+import fragmentShader from './hoverFishEyeFragment.glsl'
+import vertexShader from './hoverFishEyeVertex.glsl'
 
 // material
 const ImageShaderMaterial = shaderMaterial(
@@ -26,7 +27,7 @@ declare global {
   }
 }
 
-const HoverDistortion = () => {
+const HoverFishEye = () => {
   // refs
   const shaderRef = useRef<ShaderMaterial>(null!)
   const images = useTexture(['./testImage.png'])
@@ -48,4 +49,4 @@ const HoverDistortion = () => {
   )
 }
 
-export default HoverDistortion
+export default HoverFishEye
