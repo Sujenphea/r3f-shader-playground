@@ -27,10 +27,14 @@ declare global {
   }
 }
 
-const HoverFishEye = () => {
+type Props = {
+  imageLink: string
+}
+
+const HoverFishEye = (props: Props) => {
   // refs
   const shaderRef = useRef<ShaderMaterial>(null!)
-  const images = useTexture(['./testImage.png'])
+  const images = useTexture([props.imageLink])
 
   useEffect(() => {
     shaderRef.current.uniforms.uTexture.value = images[0]
@@ -50,3 +54,7 @@ const HoverFishEye = () => {
 }
 
 export default HoverFishEye
+
+HoverFishEye.defaultProps = {
+  imageLink: './testImage.png',
+}

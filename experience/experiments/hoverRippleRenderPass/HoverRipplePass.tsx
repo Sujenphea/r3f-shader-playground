@@ -25,9 +25,23 @@ declare global {
   }
 }
 
-const HoverRipplePass = () => {
+type Props = {
+  imageURL: string
+  rippleBrushTextureURL: string
+  maxRipples: number
+  minRippleSpeed: number
+}
+
+/**
+ *
+ * @param imageURL image for wave ripple texture
+ * @param rippleBrushTextureURL determines the type of ripple produced
+ * @param maxRipples no. ripples allowed per frame. Default = 100
+ * @param minSpeed speed of mouse required to activate ripple. Default = 5
+ */
+const HoverRipplePass = (props: Props) => {
   // refs
-  const images = useTexture(['./testImage.png'])
+  const images = useTexture([props.imageURL])
 
   const material = (texture: Texture) => {
     return new ShaderMaterial({
@@ -46,9 +60,20 @@ const HoverRipplePass = () => {
         material={material(images[0])}
         position={[0, 0, 0]}
       />
-      <Effect />
+      <Effect
+        maxRipples={props.maxRipples}
+        minRippleSpeed={props.minRippleSpeed}
+        rippleBrushTextureURL={props.rippleBrushTextureURL}
+      />
     </group>
   )
 }
 
 export default HoverRipplePass
+
+HoverRipplePass.defaultProps = {
+  imageURL: './testImage.png',
+  rippleBrushTextureURL: './brush.png',
+  maxRipples: 100,
+  minRippleSpeed: 5,
+}

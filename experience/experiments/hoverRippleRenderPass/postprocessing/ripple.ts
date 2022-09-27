@@ -8,7 +8,6 @@ import {
   Scene,
   WebGLRenderTarget,
   OrthographicCamera,
-  PerspectiveCamera,
   Mesh,
   Vector2,
   Texture,
@@ -21,25 +20,37 @@ import {
 
 export class RippleRenderer {
   private _scene: Scene
+  private _texture: Texture
   private _target: WebGLRenderTarget
   private _camera: OrthographicCamera
 
   private _meshes: Mesh[] = [] // each mesh contains one brush = one ripple
   private _currentMeshIndex = 0 // ref to which mesh to draw ripple on
 
-  private _maxRipples = 100 // max no. mesh = max no. ripples
-  private _minSpeed = 5 // min mouse speed required to activate ripple
+  private _maxRipples: number // max no. mesh = max no. ripples
+  private _minSpeed: number // min mouse speed required to activate ripple
 
   private _mouse = new Vector2(0, 0)
   private _prevMouse = new Vector2(0, 0) // store previous mouse coords
 
   /**
    * constructor
-   * @param _texture ripple brush texture
+   * @param texture ripple brush texture
+   * @param maxRipples no. ripples allowed per frame. Default = 100
+   * @param minSpeed speed of mouse required to activate ripple. Default = 5
    */
-  constructor(private _texture: Texture) {
+  constructor(
+    private texture: Texture,
+    private maxRipples: number = 100,
+    private minSpeed: number = 5
+  ) {
     this._scene = new Scene()
+    this._texture = this.texture
     this._target = new WebGLRenderTarget(window.innerWidth, window.innerHeight)
+
+    // properties
+    this._maxRipples = this.maxRipples
+    this._minSpeed = this.minSpeed
 
     // camera
     const { width, height } = this._getCameraDimensions()

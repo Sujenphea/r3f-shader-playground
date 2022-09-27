@@ -7,12 +7,25 @@ import { ShaderPass } from 'three-stdlib'
 import RippleShader from './RippleShader'
 import { RippleRenderer } from './ripple'
 
-const Effect = () => {
+type Props = {
+  rippleBrushTextureURL: string
+  maxRipples: number
+  minRippleSpeed: number
+}
+
+/**
+ *
+ * @param rippleBrushTextureURL determines the type of ripple produced
+ * @param maxRipples no. ripples allowed per frame. Default = 100
+ * @param minSpeed speed of mouse required to activate ripple. Default = 5
+ */
+const Effect = (props: Props) => {
   // refs
   const rippleRef = useRef<ShaderPass>(null)
-  const rippleTexture = useTexture('./brush.png')
+  const rippleTexture = useTexture(props.rippleBrushTextureURL)
   const effect = useMemo(
-    () => new RippleRenderer(rippleTexture),
+    () =>
+      new RippleRenderer(rippleTexture, props.maxRipples, props.minRippleSpeed),
     [rippleTexture]
   )
 
@@ -39,6 +52,12 @@ const Effect = () => {
       <shaderPass args={[RippleShader]} ref={rippleRef} />
     </EffectsComposer>
   )
+}
+
+Effect.defaultProps = {
+  rippleBrushTextureURL: './brush.png',
+  maxRipples: 100,
+  minRippleSpeed: 5,
 }
 
 export default Effect
