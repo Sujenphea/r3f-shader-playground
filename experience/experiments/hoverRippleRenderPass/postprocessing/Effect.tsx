@@ -21,7 +21,7 @@ const Effect = () => {
 
   // tick
   useFrame(({ gl }) => {
-    effect.update(gl, rippleRef.current!.uniforms.uDisplacement)
+    effect.updateTexture(gl, rippleRef.current!.uniforms.uDisplacement)
   })
 
   useEffect(() => {
