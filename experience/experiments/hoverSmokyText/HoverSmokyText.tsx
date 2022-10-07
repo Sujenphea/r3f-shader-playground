@@ -1,8 +1,14 @@
 import { useEffect, useRef } from 'react'
 
 import { Plane, shaderMaterial, useTexture } from '@react-three/drei'
-import { extend, Object3DNode, ThreeEvent } from '@react-three/fiber'
-import { ShaderMaterial, Vector2 } from 'three'
+import { extend, Object3DNode, ThreeEvent, useFrame } from '@react-three/fiber'
+import {
+  LinearFilter,
+  RepeatWrapping,
+  ShaderMaterial,
+  Texture,
+  Vector2,
+} from 'three'
 
 import fragmentShader from './smokyTextFragment.glsl'
 import vertexShader from './smokyTextVertex.glsl'
@@ -11,6 +17,8 @@ import vertexShader from './smokyTextVertex.glsl'
 const SmokyTextShaderMaterial = shaderMaterial(
   {
     uTexture: null,
+    uNoiseTexture: null,
+    uTime: 0,
     uMouse: new Vector2(),
   },
   vertexShader,
@@ -32,14 +40,28 @@ declare global {
 
 type Props = {}
 
-const HoverSmokyText = (props: Props) => {
+const HoverSmokyText = () => {
   // refs
   const shaderRef = useRef<ShaderMaterial>(null!)
-  const images = useTexture(['./blackmatter.png'])
+  const [textImage, noiseImage] = useTexture(
+    ['./blackmatter.png', './noise.png'],
+    (texs) => {
+      const noiseImage = (texs as Texture[])[1]
+      noiseImage.wrapS = RepeatWrapping
+      noiseImage.wrapT = RepeatWrapping
+      noiseImage.minFilter = LinearFilter
+    }
+  )
+
+  // tick
+  useFrame(({ clock }) => {
+    shaderRef.current.uniforms.uTime.value = clock.elapsedTime
+  })
 
   useEffect(() => {
-    shaderRef.current.uniforms.uTexture.value = images[0]
-  }, [images])
+    shaderRef.current.uniforms.uTexture.value = textImage
+    shaderRef.current.uniforms.uNoiseTexture.value = noiseImage
+  }, [textImage, noiseImage])
 
   function handleMouseMove(ev: ThreeEvent<PointerEvent>) {
     shaderRef.current.uniforms.uMouse.value = ev.uv
