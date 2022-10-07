@@ -19,6 +19,8 @@ const ExperienceCanvas = () => {
       height: 100vh;
       width: 100vw;
 
+      background-color: pink;
+
       z-index: 0;
     `,
     button: css`
