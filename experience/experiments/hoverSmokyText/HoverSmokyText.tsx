@@ -1,9 +1,22 @@
 import { useEffect, useRef } from 'react'
 
-import { Plane, shaderMaterial, useTexture } from '@react-three/drei'
-import { extend, Object3DNode, ThreeEvent, useFrame } from '@react-three/fiber'
+import {
+  PerspectiveCamera,
+  Plane,
+  shaderMaterial,
+  useTexture,
+} from '@react-three/drei'
+import {
+  extend,
+  Object3DNode,
+  ThreeEvent,
+  useFrame,
+  useThree,
+} from '@react-three/fiber'
 import {
   LinearFilter,
+  Mesh,
+  PerspectiveCamera as ThreePerspectiveCamera,
   RepeatWrapping,
   ShaderMaterial,
   Texture,
@@ -43,6 +56,9 @@ type Props = {}
 const HoverSmokyText = () => {
   // refs
   const shaderRef = useRef<ShaderMaterial>(null!)
+  const cameraRef = useRef<ThreePerspectiveCamera>(null!)
+  const objectRef = useRef<Mesh>(null!)
+
   const [textImage, noiseImage] = useTexture(
     ['./blackmatter.png', './noise.png'],
     (texs) => {
@@ -52,6 +68,8 @@ const HoverSmokyText = () => {
       noiseImage.minFilter = LinearFilter
     }
   )
+
+  const { viewport } = useThree()
 
   // tick
   useFrame(({ clock }) => {
@@ -69,7 +87,17 @@ const HoverSmokyText = () => {
 
   return (
     <group>
-      <Plane args={[5, 5]} onPointerMove={handleMouseMove}>
+      <PerspectiveCamera
+        makeDefault
+        ref={cameraRef}
+        args={[70, 1, 0.1, 10000]}
+        position={[0, 0, 0.71]}
+      />
+      <Plane
+        args={[viewport.aspect, 1]}
+        onPointerMove={handleMouseMove}
+        ref={objectRef}
+      >
         <smokyTextShaderMaterial ref={shaderRef} />
       </Plane>
     </group>
