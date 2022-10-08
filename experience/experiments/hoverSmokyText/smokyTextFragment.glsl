@@ -3,22 +3,25 @@ uniform sampler2D uNoiseTexture;
 uniform vec2 uMouse;
 uniform float uTime;
 
-varying vec2 vUv;
-
 // shadows
-const float density = 0.7; // distance of shadow from main text
-const int samples = 4; // The number of samples to take
-const float weight = 0.38; // shadow weighting
-const float decay = 0.8; // the amount to decay each sample by
+uniform float uDensity; // distance of shadow from main text
+uniform int uSamples; // The number of samples to take
+uniform float uWeight; // shadow weighting
+uniform float uDecay; // the amount to decay each sample by
 
 // spotlight
-const float spotlightDiameter = 0.4; // size of spotlight
-const float spotlightColourRadius = 0.4; // radius of color of spotlight (minimum alrdy applied)
-const float exposure = 0.5; // light exposure
+uniform float uSpotlightDiameter; // size of spotlight
+uniform float uSpotlightColourRadius; // radius of color of spotlight (minimum alrdy applied)
+uniform float uExposure; // light exposure
 
 // colors
-const vec3 spotlightColor = vec3(0.639, 0.051, 1.0);
-const vec3 textColor = vec3(0.114, 0.682, 1.0);
+uniform vec3 uSpotlightColor;
+uniform vec3 uTextColor;
+
+// varyings
+varying vec2 vUv;
+
+// variables
 const vec3 backgroundColor = vec3(0.0, 0.0, 0.0); 
 
 // form text given texture containing text
@@ -31,7 +34,7 @@ float formText(vec2 uv) {
 
 // form spotlight on hover position
 float formSpotlight(vec2 uv, vec2 uMouse, float object) {
-    return (1.0 - smoothstep(0.0, spotlightDiameter, length(uMouse - uv))) * 
+    return (1.0 - smoothstep(0.0, uSpotlightDiameter, length(uMouse - uv))) * 
            (1.0 - object);
 }
 
@@ -53,12 +56,12 @@ void main() {
 
     float mappedText = formSpotlight(uv, uMouse, text); // creates spotlight effect
 
-    vec2 shadowOffset = (uv - uMouse) * (1.0 / float(samples) * density);
+    vec2 shadowOffset = (uv - uMouse) * (1.0 / float(uSamples) * uDensity);
     float currentDecay = 1.0;
 
     // repeat with each shadow
     vec2 _uv = vUv;
-    for (int i = 0; i < samples; i++) {
+    for (int i = 0; i < uSamples; i++) {
         _uv -= shadowOffset;
         
         // - scattering
@@ -75,25 +78,24 @@ void main() {
         float shadowText = formSpotlight(uv, uMouse, formText(_uv + shadowOffset * dither)); // create spotlight effect on shadow
         
         // - fade shadow
-        shadowText *= currentDecay * weight;
+        shadowText *= currentDecay * uWeight;
         
         // - gradually increase value of fade
-        currentDecay *= decay; 
+        currentDecay *= uDecay; 
 
         // - add shadow onto mappedText
         mappedText += shadowText;
     }
 
-    float colorMixRatio = length(uMouse - uv) * (1.0 / spotlightColourRadius);
+    float colorMixRatio = length(uMouse - uv) * (1.0 / uSpotlightColourRadius);
 
     // - color of letters
     // - mix color based on position from hover
-    vec3 spotlightColor = mix(spotlightColor, textColor, colorMixRatio);
-    // vec3 spotlightColor = textColor;
+    vec3 uSpotlightColor = mix(uSpotlightColor, uTextColor, colorMixRatio);
 
     // - mappedText = letters
     // - exposure = brightness
-    color = vec3(backgroundColor + mappedText * exposure * spotlightColor);
+    color = vec3(backgroundColor + mappedText * uExposure * uSpotlightColor);
 
     gl_FragColor = vec4(color, 1.0);
 }
