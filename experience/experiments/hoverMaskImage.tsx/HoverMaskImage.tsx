@@ -14,8 +14,8 @@ const MaskImageShaderMaterial = shaderMaterial(
     tMask: null,
     tVideo: null,
 
-    uTransitionHover: 1,
-    uTransitionState: 0.5,
+    uTransitionHover: 0,
+    uTransitionState: 0,
     uMeshSizes: [0, 0],
     uViewportSizes: [0, 0],
     uGrid: [0, 0],
@@ -64,7 +64,26 @@ const HoverMaskImage = () => {
 
   return (
     <group>
-      <mesh>
+      <mesh
+        onPointerOver={() => {
+          gsap.timeline({}).to(
+            shaderRef.current.uniforms.uTransitionHover,
+            {
+              value: 1,
+            },
+            'start'
+          )
+        }}
+        onPointerOut={() => {
+          gsap.timeline({}).to(
+            shaderRef.current.uniforms.uTransitionHover,
+            {
+              value: 0,
+            },
+            'start'
+          )
+        }}
+      >
         <planeGeometry args={[2, 2]} />
         <maskImageShaderMaterial ref={shaderRef} />
       </mesh>
