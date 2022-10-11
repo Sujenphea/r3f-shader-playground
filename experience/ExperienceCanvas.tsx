@@ -12,6 +12,10 @@ const ExperienceCanvas = () => {
   // styles
   const styles = {
     container: css`
+      position: fixed;
+      top: 0;
+      left: 0;
+
       display: flex;
       justify-content: center;
       align-items: center;
