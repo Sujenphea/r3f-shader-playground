@@ -1,8 +1,10 @@
-import { Plane, shaderMaterial, useTexture } from '@react-three/drei'
-import { extend, Object3DNode, useThree } from '@react-three/fiber'
-import gsap from 'gsap'
 import { useEffect, useRef } from 'react'
-import { Vector2, ShaderMaterial, Vector3, Texture } from 'three'
+
+import { shaderMaterial, useTexture } from '@react-three/drei'
+import { extend, Object3DNode, useThree } from '@react-three/fiber'
+import { ShaderMaterial, Texture } from 'three'
+
+import gsap from 'gsap'
 
 import fragmentShader from './hoverMaskImageFragment.glsl'
 import vertexShader from './hoverMaskImageVertex.glsl'
@@ -10,16 +12,16 @@ import vertexShader from './hoverMaskImageVertex.glsl'
 // material
 const MaskImageShaderMaterial = shaderMaterial(
   {
-    uColorProject: new Vector3(1.0, 0.3, 1.0),
+    uBackgroundColor: [
+      0.9333333333333333, 0.9137254901960784, 0.8745098039215686,
+    ],
+    uBackgroundShapeColor: [
+      0.984313725490196, 0.9686274509803922, 0.9294117647058824,
+    ],
     tMask: null,
     tVideo: null,
 
     uTransitionHover: 0,
-    uTransitionState: 0,
-    uMeshSizes: [0, 0],
-    uViewportSizes: [0, 0],
-    uGrid: [0, 0],
-    uStrength: 0,
   },
   vertexShader,
   fragmentShader
@@ -50,17 +52,6 @@ const HoverMaskImage = () => {
       shaderRef.current.uniforms.tVideo.value = imageTextures[1]
     }
   )
-
-  const { viewport } = useThree()
-
-  useEffect(() => {
-    shaderRef.current.uniforms.uViewportSizes.value = [
-      viewport.width,
-      viewport.height,
-    ]
-
-    shaderRef.current.uniforms.uGrid.value = [0, 1]
-  }, [])
 
   return (
     <group>
