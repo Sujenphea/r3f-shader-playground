@@ -1,3 +1,9 @@
+/**
+ * idea:
+ * - effect of page folding towards user when user scrolls
+ * - important for plane mesh to have more height segments
+ */
+
 import { useEffect, useRef } from 'react'
 
 import { shaderMaterial } from '@react-three/drei'
@@ -45,6 +51,7 @@ const ScrollWaveMesh = () => {
 
   const { viewport } = useThree()
 
+  // ticks
   useFrame(({ clock }) => {
     shaderRef.current.uniforms.uTime.value = clock.elapsedTime
     shaderRef.current.uniforms.uViewportSizes.value = [
@@ -53,24 +60,28 @@ const ScrollWaveMesh = () => {
     ]
   })
 
+  // hooks
   useEffect(() => {
     meshRef.current.position.y = 7.5
 
+    // manage scroll
     gsap.timeline({
       scrollTrigger: {
         trigger: '.scrollDiv',
         start: '20px top', // 'top top' causes glitch
         end: 'bottom bottom',
-        scrub: 10,
 
         onUpdate: (self) => {
-          speed.current += 0.0002 * (self.getVelocity() - scroll.current)
+          // update scroll
+          speed.current += 0.001 * (self.scroll() - scroll.current)
           speed.current *= 0.9
           shaderRef.current.uniforms.uStrength.value = speed.current
 
-          scroll.current = self.getVelocity()
-
+          // position mesh between [-7.5, 7.5]
           meshRef.current.position.y = (self.progress - 0.5) * -15
+
+          // update state
+          scroll.current = self.scroll()
         },
       },
     })
