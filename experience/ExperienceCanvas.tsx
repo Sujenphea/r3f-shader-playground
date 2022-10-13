@@ -6,7 +6,7 @@ import { Canvas } from '@react-three/fiber'
 
 import CameraControls from './CameraControls'
 
-import ScrollWaveMesh from './experiments/scrollWaveMesh/scrollWaveMesh'
+import ScrollRotateModel from './experiments/temp/scrollRotateModel'
 
 const ExperienceCanvas = () => {
   // styles
@@ -42,7 +42,7 @@ const ExperienceCanvas = () => {
         {/* <CameraControls /> */}
 
         <Suspense fallback={null}>
-          <ScrollWaveMesh />
+          <ScrollRotateModel />
         </Suspense>
       </Canvas>
     </div>
