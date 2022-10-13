@@ -1,3 +1,7 @@
+/**
+ * wave wireframe style object acting as the ground
+ */
+
 import { useEffect, useRef } from 'react'
 
 import {

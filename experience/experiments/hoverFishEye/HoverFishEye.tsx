@@ -1,3 +1,8 @@
+/**
+ * initial: plane
+ * hover: distortion effect like fish eye on mouse position
+ */
+
 import { useEffect, useRef } from 'react'
 
 import { ShaderMaterial, Vector2 } from 'three'

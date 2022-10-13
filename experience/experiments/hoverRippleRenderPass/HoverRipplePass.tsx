@@ -1,3 +1,8 @@
+/**
+ * initial: plain image
+ * on hover: ripple on image with each mouse movement
+ */
+
 import { ShaderMaterial, Texture } from 'three'
 import { extend, Object3DNode } from '@react-three/fiber'
 import { Plane, shaderMaterial, useTexture } from '@react-three/drei'

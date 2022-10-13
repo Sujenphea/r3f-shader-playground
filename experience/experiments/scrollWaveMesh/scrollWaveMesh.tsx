@@ -1,7 +1,7 @@
 /**
- * idea:
- * - effect of page folding towards user when user scrolls
- * - important for plane mesh to have more height segments
+ * initial: plane
+ * on scroll: effect of page curved towards user
+ * important: plane mesh have > 1 height segments
  */
 
 import { useEffect, useRef } from 'react'

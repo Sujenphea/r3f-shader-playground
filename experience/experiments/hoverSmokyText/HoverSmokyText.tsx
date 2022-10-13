@@ -1,3 +1,9 @@
+/**
+ * initial: dark background with image filled with text
+ * on hover: mouse acts as spotlight
+ * on hover: shadow effect acting like dust particles
+ */
+
 import { useEffect, useRef } from 'react'
 
 import {

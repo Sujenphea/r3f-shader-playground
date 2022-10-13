@@ -1,3 +1,9 @@
+/**
+ * initial: shows a mask image filled with shapes
+ * on hover: mask transitions to have more 'shapes'
+ * on hover: mask shapes transition from color to an image/video
+ */
+
 import { useEffect, useRef } from 'react'
 
 import { shaderMaterial, useTexture } from '@react-three/drei'
