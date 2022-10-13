@@ -6,7 +6,7 @@ import { Canvas } from '@react-three/fiber'
 
 import CameraControls from './CameraControls'
 
-import HoverMaskImage from './experiments/hoverMaskImage.tsx/HoverMaskImage'
+import ScrollWaveMesh from './experiments/scrollWaveMesh/scrollWaveMesh'
 
 const ExperienceCanvas = () => {
   // styles
@@ -42,7 +42,7 @@ const ExperienceCanvas = () => {
         {/* <CameraControls /> */}
 
         <Suspense fallback={null}>
-          <HoverMaskImage />
+          <ScrollWaveMesh />
         </Suspense>
       </Canvas>
     </div>
