@@ -25,13 +25,14 @@ uniform float uAlpha;
 varying vec2 vUv;
 
 void main() {
-  vec3 color = vec3(1.0, 0.5, 1.0);
-  float alpha = 1.0;
+  float alpha = 0.0;
+  vec3 colour = vec3(1.0);
 
-  vec3 texture = texture2D(uTexture, vec2(vUv.x,  0.5 + vUv.y / 2.0)).rgb;
-  color = texture;
+  colour = texture2D(uTexture, vec2(vUv.x, 0.5 + vUv.y / 2.0)).rgb;
+  alpha = texture2D(uTexture, vec2(vUv.x, vUv.y / 2.0)).r;
+  alpha *= uAlpha;
 
-  gl_FragColor = vec4(color, alpha);
+  gl_FragColor = vec4(colour, alpha);
 }
 `
 
@@ -65,6 +66,12 @@ const ScrollRotateModel = () => {
   const shaderRefTop = useRef<ShaderMaterial>(null!)
   const shaderRefBottom = useRef<ShaderMaterial>(null!)
 
+  // hooks
+  useEffect(() => {
+    shaderRefTop.current.uniforms.uAlpha.value = 1
+    shaderRefBottom.current.uniforms.uAlpha.value = 0
+  }, [])
+
   useEffect(() => {
     shaderRefTop.current.uniforms.uTexture.value = videoTextureTop
   }, [videoTextureTop])
@@ -77,12 +84,12 @@ const ScrollRotateModel = () => {
     <group>
       <mesh position={[0, 2, 0]}>
         <planeGeometry args={[3, 3, 1, 20]} />
-        <scrollRotateShaderMaterial ref={shaderRefTop} />
+        <scrollRotateShaderMaterial ref={shaderRefTop} transparent />
       </mesh>
 
       <mesh position={[0, -2, 0]}>
         <planeGeometry args={[3, 3, 1, 20]} />
-        <scrollRotateShaderMaterial ref={shaderRefBottom} />
+        <scrollRotateShaderMaterial ref={shaderRefBottom} transparent />
       </mesh>
     </group>
   )
