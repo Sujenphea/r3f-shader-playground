@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react'
 
 import {
+  PerspectiveCamera,
   shaderMaterial,
   useGLTF,
   useTexture,
   useVideoTexture,
 } from '@react-three/drei'
-import { extend, Object3DNode } from '@react-three/fiber'
+import { extend, Object3DNode, useThree } from '@react-three/fiber'
 import { Mesh, ShaderMaterial } from 'three'
 
 const vertexShader = `
@@ -80,6 +81,8 @@ const ScrollRotateModel = () => {
   const holeModel = useGLTF('./holeModel.glb')
   const bakedHoleTexture = useTexture('./baked.jpg')
 
+  const { viewport } = useThree()
+
   // hooks
   useEffect(() => {
     holeRef.current.geometry.center()
@@ -104,6 +107,14 @@ const ScrollRotateModel = () => {
 
   return (
     <group>
+      {/* camera */}
+      <PerspectiveCamera
+        makeDefault
+        args={[70, viewport.width / viewport.height, 0.1, 100]}
+        position={[0, 1, 4]}
+      />
+
+      {/* hole + video */}
       <group
         position={[0, -8.4, -8.65]}
         rotation={[-0.235, 0, -Math.PI]}
@@ -127,6 +138,7 @@ const ScrollRotateModel = () => {
         </mesh>
       </group>
 
+      {/* floor */}
       <group position={[0, -7, 0.6]} rotation={[-0.24, 0, 0]} scale={[8, 8, 8]}>
         <mesh
           geometry={(floorModel.scene.children[0] as Mesh).geometry}
