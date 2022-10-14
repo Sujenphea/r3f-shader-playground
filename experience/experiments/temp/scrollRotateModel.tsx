@@ -68,6 +68,7 @@ const ScrollRotateModel = () => {
   const videoTextureTop = useVideoTexture('./flip-0.webm', {})
   const videoTextureBottom = useVideoTexture('./flip-1.webm', {})
 
+  const floorRef = useRef<Mesh>(null!)
   const holeRef = useRef<Mesh>(null!)
   const meshRefTop = useRef<Mesh>(null!)
   const meshRefBottom = useRef<Mesh>(null!)
@@ -75,12 +76,14 @@ const ScrollRotateModel = () => {
   const shaderRefTop = useRef<ShaderMaterial>(null!)
   const shaderRefBottom = useRef<ShaderMaterial>(null!)
 
+  const floorModel = useGLTF('./floorModel.glb')
   const holeModel = useGLTF('./holeModel.glb')
   const bakedHoleTexture = useTexture('./baked.jpg')
 
   // hooks
   useEffect(() => {
     holeRef.current.geometry.center()
+    floorRef.current.geometry.center()
 
     meshRefTop.current.position.set(0, -0.76, 0.24)
     meshRefTop.current.rotation.z = Math.PI
@@ -100,31 +103,42 @@ const ScrollRotateModel = () => {
   }, [videoTextureBottom])
 
   return (
-    <group
-      position={[0, -8.4, -8.65]}
-      rotation={[-0.235, 0, -Math.PI]}
-      scale={[8, 8, 8]}
-    >
-      <mesh ref={meshRefTop}>
-        <planeGeometry args={[2.949, 1.529]} />
-        <scrollRotateShaderMaterial ref={shaderRefTop} transparent />
-      </mesh>
-
-      <mesh ref={meshRefBottom}>
-        <planeGeometry args={[2.949, 1.529]} />
-        <scrollRotateShaderMaterial ref={shaderRefBottom} transparent />
-      </mesh>
-
-      <mesh
-        geometry={(holeModel.scene.children[0] as Mesh).geometry}
-        ref={holeRef}
+    <group>
+      <group
+        position={[0, -8.4, -8.65]}
+        rotation={[-0.235, 0, -Math.PI]}
+        scale={[8, 8, 8]}
       >
-        <meshBasicMaterial map={bakedHoleTexture} map-flipY={false} />
-      </mesh>
+        <mesh ref={meshRefTop}>
+          <planeGeometry args={[2.949, 1.529]} />
+          <scrollRotateShaderMaterial ref={shaderRefTop} transparent />
+        </mesh>
+
+        <mesh ref={meshRefBottom}>
+          <planeGeometry args={[2.949, 1.529]} />
+          <scrollRotateShaderMaterial ref={shaderRefBottom} transparent />
+        </mesh>
+
+        <mesh
+          geometry={(holeModel.scene.children[0] as Mesh).geometry}
+          ref={holeRef}
+        >
+          <meshBasicMaterial map={bakedHoleTexture} map-flipY={false} />
+        </mesh>
+      </group>
+
+      <group position={[0, -7, 0.6]} rotation={[-0.24, 0, 0]} scale={[8, 8, 8]}>
+        <mesh
+          geometry={(floorModel.scene.children[0] as Mesh).geometry}
+          ref={floorRef}
+        >
+          <meshBasicMaterial map={bakedHoleTexture} map-flipY={false} />
+        </mesh>
+      </group>
     </group>
   )
 }
 
 export default ScrollRotateModel
 
-useGLTF.preload('./holeModel.glb')
+useGLTF.preload(['./holeModel.glb', './floorModel.glb'])
