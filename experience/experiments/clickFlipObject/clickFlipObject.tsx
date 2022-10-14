@@ -1,3 +1,9 @@
+/**
+ * initial: masked video / image shown with plane at bottom
+ * click button: rotates to show another video / image with distorting plane effect
+ * ref: https://uplinq.non-linear.studio
+ */
+
 import { useEffect, useRef } from 'react'
 
 import {
@@ -39,26 +45,38 @@ declare global {
   }
 }
 
-const ClickFlipObject = () => {
-  const videoTextureTop = useVideoTexture('./flip-0.webm', {})
-  const videoTextureBottom = useVideoTexture('./flip-1.webm', {})
+/**
+ * video: top half for actual video, top bottom for mask
+ */
+type Props = {
+  videoTopURL: string
+  videoBottomURL: string
+}
 
+const ClickFlipObject = (props: Props) => {
+  // refs
   const floorRef = useRef<Mesh>(null!)
   const holeRef = useRef<Mesh>(null!)
   const holeGroupRef = useRef<Group>(null!)
+
   const meshRefTop = useRef<Mesh>(null!)
   const meshRefBottom = useRef<Mesh>(null!)
 
   const shaderRefTop = useRef<ShaderMaterial>(null!)
   const shaderRefBottom = useRef<ShaderMaterial>(null!)
 
+  // videos
+  const videoTextureTop = useVideoTexture(props.videoTopURL, {})
+  const videoTextureBottom = useVideoTexture(props.videoBottomURL, {})
+
+  // models
   const floorModel = useGLTF('./floorModel.glb')
   const holeModel = useGLTF('./holeModel.glb')
-  const bakedHoleTexture = useTexture('./baked.jpg')
-
-  const { viewport } = useThree()
+  const bakedTexture = useTexture('./bakedClickFlip.jpg')
 
   // hooks
+  const { viewport } = useThree()
+
   useEffect(() => {
     holeRef.current.geometry.center()
     floorRef.current.geometry.center()
@@ -129,7 +147,7 @@ const ClickFlipObject = () => {
           geometry={(holeModel.scene.children[0] as Mesh).geometry}
           ref={holeRef}
         >
-          <meshBasicMaterial map={bakedHoleTexture} map-flipY={false} />
+          <meshBasicMaterial map={bakedTexture} map-flipY={false} />
         </mesh>
       </group>
 
@@ -139,7 +157,7 @@ const ClickFlipObject = () => {
           geometry={(floorModel.scene.children[0] as Mesh).geometry}
           ref={floorRef}
         >
-          <meshBasicMaterial map={bakedHoleTexture} map-flipY={false} />
+          <meshBasicMaterial map={bakedTexture} map-flipY={false} />
         </mesh>
       </group>
     </group>
@@ -147,5 +165,10 @@ const ClickFlipObject = () => {
 }
 
 export default ClickFlipObject
+
+ClickFlipObject.defaultProps = {
+  videoTopURL: './flip-0.webm',
+  videoBottomURL: './flip-1.webm',
+}
 
 useGLTF.preload(['./holeModel.glb', './floorModel.glb'])
