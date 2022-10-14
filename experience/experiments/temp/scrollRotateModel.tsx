@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 import {
+  Html,
   PerspectiveCamera,
   shaderMaterial,
   useGLTF,
@@ -8,7 +9,9 @@ import {
   useVideoTexture,
 } from '@react-three/drei'
 import { extend, Object3DNode, useThree } from '@react-three/fiber'
-import { Mesh, ShaderMaterial } from 'three'
+import { Group, Mesh, ShaderMaterial } from 'three'
+
+import gsap from 'gsap'
 
 const vertexShader = `
 varying vec2 vUv;
@@ -71,6 +74,7 @@ const ScrollRotateModel = () => {
 
   const floorRef = useRef<Mesh>(null!)
   const holeRef = useRef<Mesh>(null!)
+  const holeGroupRef = useRef<Group>(null!)
   const meshRefTop = useRef<Mesh>(null!)
   const meshRefBottom = useRef<Mesh>(null!)
 
@@ -94,7 +98,7 @@ const ScrollRotateModel = () => {
     meshRefBottom.current.position.set(0, 0.76, 0.24)
 
     shaderRefTop.current.uniforms.uAlpha.value = 1
-    shaderRefBottom.current.uniforms.uAlpha.value = 0
+    shaderRefBottom.current.uniforms.uAlpha.value = 1
   }, [])
 
   useEffect(() => {
@@ -107,6 +111,25 @@ const ScrollRotateModel = () => {
 
   return (
     <group>
+      <Html occlude={false} fullscreen style={{ color: 'white' }}>
+        <button
+          onClick={() => {
+            gsap.to(holeGroupRef.current.rotation, {
+              duration: 1.1,
+              z: holeGroupRef.current.rotation.z - Math.PI,
+              ease: 'power3.inOut',
+            })
+          }}
+          style={{
+            position: 'absolute',
+            top: '15px',
+            left: '15px',
+          }}
+        >
+          rotate
+        </button>
+      </Html>
+
       {/* camera */}
       <PerspectiveCamera
         makeDefault
@@ -119,6 +142,7 @@ const ScrollRotateModel = () => {
         position={[0, -8.4, -8.65]}
         rotation={[-0.235, 0, -Math.PI]}
         scale={[8, 8, 8]}
+        ref={holeGroupRef}
       >
         <mesh ref={meshRefTop}>
           <planeGeometry args={[2.949, 1.529]} />
