@@ -1,6 +1,11 @@
 import { useEffect, useRef } from 'react'
 
-import { shaderMaterial, useVideoTexture } from '@react-three/drei'
+import {
+  shaderMaterial,
+  useGLTF,
+  useTexture,
+  useVideoTexture,
+} from '@react-three/drei'
 import { extend, Object3DNode } from '@react-three/fiber'
 import { Mesh, ShaderMaterial } from 'three'
 
@@ -63,11 +68,15 @@ const ScrollRotateModel = () => {
   const videoTextureTop = useVideoTexture('./flip-0.webm', {})
   const videoTextureBottom = useVideoTexture('./flip-1.webm', {})
 
+  const holeRef = useRef<Mesh>(null!)
   const meshRefTop = useRef<Mesh>(null!)
   const meshRefBottom = useRef<Mesh>(null!)
 
   const shaderRefTop = useRef<ShaderMaterial>(null!)
   const shaderRefBottom = useRef<ShaderMaterial>(null!)
+
+  const holeModel = useGLTF('./holeModel.glb')
+  const bakedHoleTexture = useTexture('./baked.jpg')
 
   // hooks
   useEffect(() => {
@@ -91,18 +100,31 @@ const ScrollRotateModel = () => {
   }, [videoTextureBottom])
 
   return (
-    <group>
-      <mesh position={[0, 2, 0]} ref={meshRefTop}>
+    <group
+      position={[0, -8.4, -8.65]}
+      rotation={[-0.235, 0, -Math.PI]}
+      scale={[8, 8, 8]}
+    >
+      <mesh ref={meshRefTop}>
         <planeGeometry args={[2.949, 1.529]} />
         <scrollRotateShaderMaterial ref={shaderRefTop} transparent />
       </mesh>
 
-      <mesh position={[0, -2, 0]} ref={meshRefBottom}>
+      <mesh ref={meshRefBottom}>
         <planeGeometry args={[2.949, 1.529]} />
         <scrollRotateShaderMaterial ref={shaderRefBottom} transparent />
+      </mesh>
+
+      <mesh
+        geometry={(holeModel.scene.children[0] as Mesh).geometry}
+        ref={holeRef}
+      >
+        <meshBasicMaterial map={bakedHoleTexture} map-flipY={false} />
       </mesh>
     </group>
   )
 }
 
 export default ScrollRotateModel
+
+useGLTF.preload('./holeModel.glb')
