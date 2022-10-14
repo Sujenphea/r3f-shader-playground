@@ -1,7 +1,8 @@
-import { shaderMaterial, useGLTF, useTexture } from '@react-three/drei'
-import { extend, Object3DNode, useLoader } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
-import { Mesh, ShaderMaterial } from 'three'
+
+import { shaderMaterial, useVideoTexture } from '@react-three/drei'
+import { extend, Object3DNode } from '@react-three/fiber'
+import { ShaderMaterial } from 'three'
 
 const vertexShader = `
 varying vec2 vUv;
@@ -58,20 +59,30 @@ declare global {
 }
 
 const ScrollRotateModel = () => {
-  const [image] = useTexture(['./testImage.png'])
+  const videoTextureTop = useVideoTexture('./flip-0.webm', {})
+  const videoTextureBottom = useVideoTexture('./flip-1.webm', {})
 
-  const meshRef = useRef<Mesh>(null!)
-  const shaderRef = useRef<ShaderMaterial>(null!)
+  const shaderRefTop = useRef<ShaderMaterial>(null!)
+  const shaderRefBottom = useRef<ShaderMaterial>(null!)
 
   useEffect(() => {
-    shaderRef.current.uniforms.uTexture.value = image
-  }, [image])
+    shaderRefTop.current.uniforms.uTexture.value = videoTextureTop
+  }, [videoTextureTop])
+
+  useEffect(() => {
+    shaderRefBottom.current.uniforms.uTexture.value = videoTextureBottom
+  }, [videoTextureBottom])
 
   return (
     <group>
-      <mesh ref={meshRef}>
-        <planeGeometry args={[5, 5, 1, 20]} />
-        <scrollRotateShaderMaterial ref={shaderRef} />
+      <mesh position={[0, 2, 0]}>
+        <planeGeometry args={[3, 3, 1, 20]} />
+        <scrollRotateShaderMaterial ref={shaderRefTop} />
+      </mesh>
+
+      <mesh position={[0, -2, 0]}>
+        <planeGeometry args={[3, 3, 1, 20]} />
+        <scrollRotateShaderMaterial ref={shaderRefBottom} />
       </mesh>
     </group>
   )
