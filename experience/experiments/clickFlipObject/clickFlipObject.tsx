@@ -13,37 +13,8 @@ import { Group, Mesh, ShaderMaterial } from 'three'
 
 import gsap from 'gsap'
 
-const vertexShader = `
-varying vec2 vUv;
-
-void main() {
-  vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-  vec4 viewPosition = viewMatrix * modelPosition;
-  vec4 projectedPosition = projectionMatrix * viewPosition;
-
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  
-  vUv = uv;  
-}
-`
-
-const fragmentShader = `
-uniform sampler2D uTexture;
-uniform float uAlpha;
-
-varying vec2 vUv;
-
-void main() {
-  float alpha = 0.0;
-  vec3 colour = vec3(1.0);
-
-  colour = texture2D(uTexture, vec2(vUv.x, 0.5 + vUv.y / 2.0)).rgb;
-  alpha = texture2D(uTexture, vec2(vUv.x, vUv.y / 2.0)).r;
-  alpha *= uAlpha;
-
-  gl_FragColor = vec4(colour, alpha);
-}
-`
+import fragmentShader from './clickFlipObjectFragment.glsl'
+import vertexShader from './clickFlipObjectVertex.glsl'
 
 // material
 const ScrollRotateShaderMaterial = shaderMaterial(
@@ -68,7 +39,7 @@ declare global {
   }
 }
 
-const ScrollRotateModel = () => {
+const ClickFlipObject = () => {
   const videoTextureTop = useVideoTexture('./flip-0.webm', {})
   const videoTextureBottom = useVideoTexture('./flip-1.webm', {})
 
@@ -175,6 +146,6 @@ const ScrollRotateModel = () => {
   )
 }
 
-export default ScrollRotateModel
+export default ClickFlipObject
 
 useGLTF.preload(['./holeModel.glb', './floorModel.glb'])
