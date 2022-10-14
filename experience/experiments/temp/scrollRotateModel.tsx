@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 
 import { shaderMaterial, useVideoTexture } from '@react-three/drei'
 import { extend, Object3DNode } from '@react-three/fiber'
-import { ShaderMaterial } from 'three'
+import { Mesh, ShaderMaterial } from 'three'
 
 const vertexShader = `
 varying vec2 vUv;
@@ -63,11 +63,21 @@ const ScrollRotateModel = () => {
   const videoTextureTop = useVideoTexture('./flip-0.webm', {})
   const videoTextureBottom = useVideoTexture('./flip-1.webm', {})
 
+  const meshRefTop = useRef<Mesh>(null!)
+  const meshRefBottom = useRef<Mesh>(null!)
+
   const shaderRefTop = useRef<ShaderMaterial>(null!)
   const shaderRefBottom = useRef<ShaderMaterial>(null!)
 
   // hooks
   useEffect(() => {
+    holeRef.current.geometry.center()
+
+    meshRefTop.current.position.set(0, -0.76, 0.24)
+    meshRefTop.current.rotation.z = Math.PI
+
+    meshRefBottom.current.position.set(0, 0.76, 0.24)
+
     shaderRefTop.current.uniforms.uAlpha.value = 1
     shaderRefBottom.current.uniforms.uAlpha.value = 0
   }, [])
@@ -82,13 +92,13 @@ const ScrollRotateModel = () => {
 
   return (
     <group>
-      <mesh position={[0, 2, 0]}>
-        <planeGeometry args={[3, 3, 1, 20]} />
+      <mesh position={[0, 2, 0]} ref={meshRefTop}>
+        <planeGeometry args={[2.949, 1.529]} />
         <scrollRotateShaderMaterial ref={shaderRefTop} transparent />
       </mesh>
 
-      <mesh position={[0, -2, 0]}>
-        <planeGeometry args={[3, 3, 1, 20]} />
+      <mesh position={[0, -2, 0]} ref={meshRefBottom}>
+        <planeGeometry args={[2.949, 1.529]} />
         <scrollRotateShaderMaterial ref={shaderRefBottom} transparent />
       </mesh>
     </group>
