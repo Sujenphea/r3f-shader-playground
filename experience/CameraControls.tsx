@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-const CameraControls = () => {
+const CameraControls = (props: { enabled: boolean }) => {
   // refs
   const controls = useRef<OrbitControls | null>(null)
 
@@ -28,7 +28,7 @@ const CameraControls = () => {
     <orbitControls
       ref={controls}
       args={[camera, gl.domElement]}
-      enabled={true}
+      enabled={props.enabled}
       enablePan={true}
       enableZoom={true}
       enableDamping
