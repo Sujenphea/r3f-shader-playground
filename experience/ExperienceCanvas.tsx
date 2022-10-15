@@ -6,7 +6,7 @@ import { Canvas } from '@react-three/fiber'
 
 import CameraControls from './CameraControls'
 
-import ScrollWaveMesh from './experiments/scrollWaveMesh/scrollWaveMesh'
+import ClickFlipObject from './experiments/clickFlipObject/clickFlipObject'
 
 const ExperienceCanvas = () => {
   // styles
@@ -39,10 +39,10 @@ const ExperienceCanvas = () => {
   return (
     <div css={styles.container}>
       <Canvas dpr={[1, 2]} linear>
-        {/* <CameraControls /> */}
+        <CameraControls enabled={false} />
 
         <Suspense fallback={null}>
-          <ScrollWaveMesh />
+          <ClickFlipObject />
         </Suspense>
       </Canvas>
     </div>
