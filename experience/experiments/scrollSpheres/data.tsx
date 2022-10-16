@@ -26,7 +26,7 @@ function mix(x: number, y: number, interpolation: number) {
  * progress: values between [0, 1]
  */
 // vector values
-function interpolateVectors(progress: number, vectors: Vector3[]) {
+export function interpolateVectors(progress: number, vectors: Vector3[]) {
   var normalisedProgress = progress * (vectors.length - 1) // split between values
 
   var vector1 = vectors[Math.floor(normalisedProgress)] // first vector
@@ -41,7 +41,7 @@ function interpolateVectors(progress: number, vectors: Vector3[]) {
 }
 
 // scalar values
-function interpolateValues(progress: number, valuesArray: number[]) {
+export function interpolateValues(progress: number, valuesArray: number[]) {
   var normalisedProgress = progress * (valuesArray.length - 1)
 
   var value1 = valuesArray[Math.floor(normalisedProgress)]
@@ -57,7 +57,7 @@ function interpolateValues(progress: number, valuesArray: number[]) {
 function linearInterpolate(
   property: string,
   interpolationArray: any[],
-  isVector = false
+  isVector = true
 ) {
   var result: any[] = []
   var interpolate = isVector ? interpolateVectors : interpolateValues // choose scalar or vector function
@@ -2255,7 +2255,6 @@ const data = [
     groupsData: benefit3Groups,
     cameraData: benefit3Camera,
   },
-
   {
     name: 'personas',
     spheresData: personasSphere,
