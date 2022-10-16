@@ -6,7 +6,7 @@ import { Canvas } from '@react-three/fiber'
 
 import CameraControls from './CameraControls'
 
-import ClickFlipObject from './experiments/clickFlipObject/clickFlipObject'
+import ScrollSpheres from './experiments/scrollSpheres/scrollSpheres'
 
 const ExperienceCanvas = () => {
   // styles
@@ -42,7 +42,7 @@ const ExperienceCanvas = () => {
         <CameraControls enabled={false} />
 
         <Suspense fallback={null}>
-          <ClickFlipObject />
+          <ScrollSpheres />
         </Suspense>
       </Canvas>
     </div>
