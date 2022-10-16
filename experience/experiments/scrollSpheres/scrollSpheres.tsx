@@ -1,21 +1,18 @@
 import { useEffect, useRef } from 'react'
 
 import { Mesh, MeshStandardMaterial, SphereGeometry, Vector3 } from 'three'
+import { useFrame } from '@react-three/fiber'
 
 import data, { interpolateVectors } from './data'
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
-import { useFrame } from '@react-three/fiber'
 
 gsap.registerPlugin(ScrollTrigger)
 
 // spheresCount: 13
 const ScrollSpheres = () => {
   const geometry = useRef(new SphereGeometry(1, 50, 50))
-  const material = useRef(
-    new MeshStandardMaterial({ metalness: 0, roughness: 1 })
-  )
 
   const spheresRef = useRef<Mesh[]>(
     new Array(data[0].spheresData.length).fill(null)
@@ -87,8 +84,9 @@ const ScrollSpheres = () => {
             ref={(ref) => (spheresRef.current[i] = ref!)}
             key={'sphere' + i}
             geometry={geometry.current}
-            material={material.current}
-          />
+          >
+            <meshBasicMaterial color={(Math.random() * 0xffffff) << 0} />
+          </mesh>
         )
       })}
     </group>
