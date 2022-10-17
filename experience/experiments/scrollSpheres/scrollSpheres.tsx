@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { Mesh, MeshStandardMaterial, SphereGeometry, Vector3 } from 'three'
+import { Group, Mesh, SphereGeometry, Vector3 } from 'three'
 import { useFrame } from '@react-three/fiber'
 
 import data, { interpolateValues, interpolateVectors } from './data'
@@ -15,9 +15,9 @@ gsap.registerPlugin(ScrollTrigger)
 const ScrollSpheres = () => {
   const geometry = useRef(new SphereGeometry(1, 50, 50))
 
-  const spheresRef = useRef<Mesh[]>(
-    new Array(data[0].spheresData.length).fill(null)
-  )
+  // refs
+  const spheresRef = useRef<Mesh[]>(new Array(13).fill(null))
+  const groupRef = useRef<Group>(null!)
   const positionsRef = useRef<Vector3[]>([])
   const scalesRef = useRef<number[]>([])
 
@@ -63,11 +63,30 @@ const ScrollSpheres = () => {
 
             scalesRef.current[i] = newScale
           })
+
+          // update group
+          const newGroupRotation = interpolateVectors(
+            progress,
+            data[sectionIndex].groupsData.rotations
+          )
+          const newGroupPosition = interpolateVectors(
+            progress,
+            data[sectionIndex].groupsData.positions
+          )
+
+          groupRef.current.rotation.x = newGroupRotation.x
+          groupRef.current.rotation.y = newGroupRotation.y
+          groupRef.current.rotation.z = newGroupRotation.z
+
+          groupRef.current.position.x = newGroupPosition.x
+          groupRef.current.position.y = newGroupPosition.y
+          groupRef.current.position.z = newGroupPosition.z
         },
       },
     })
   }, [])
 
+  // tick: update sphere position, scale + group
   useFrame(() => {
     positionsRef.current.forEach((position, i) => {
       spheresRef.current[i].position.copy(position)
@@ -79,7 +98,7 @@ const ScrollSpheres = () => {
   })
 
   return (
-    <group>
+    <group ref={groupRef}>
       {[...Array(13)].map((_, i) => {
         return (
           <mesh
