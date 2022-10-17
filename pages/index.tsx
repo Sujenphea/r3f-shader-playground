@@ -5,7 +5,7 @@ export default function Home() {
   // styles
   const styles = {
     scrollContainer: css`
-      height: 3000px;
+      height: 10000px;
     `,
   }
 

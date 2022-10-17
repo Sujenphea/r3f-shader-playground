@@ -38,7 +38,7 @@ const ExperienceCanvas = () => {
 
   return (
     <div css={styles.container}>
-      <Canvas dpr={[1, 2]} linear>
+      <Canvas dpr={[1, 2]} linear camera={{ position: [0, 0, 30] }}>
         {/* <CameraControls enabled={true} /> */}
 
         <Suspense fallback={null}>

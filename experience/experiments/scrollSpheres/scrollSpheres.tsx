@@ -11,6 +11,7 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 // spheresCount: 13
+// sectionsCount: 6
 const ScrollSpheres = () => {
   const geometry = useRef(new SphereGeometry(1, 50, 50))
 
@@ -35,36 +36,20 @@ const ScrollSpheres = () => {
         end: 'bottom bottom',
 
         onUpdate: (self) => {
-          if (self.progress < 0.5) {
-            // hero
-            const heroProgress = self.progress * 2
+          const sectionIndex = Math.min(Math.trunc(self.progress * 6), 5) // which section
+          const progress = (self.progress - sectionIndex * (1 / 6)) * 6 //
 
-            const newPositionArray = Array(13).fill([])
-            data[0].spheresData.forEach((sphereData, i) => {
-              const newPosition = interpolateVectors(
-                heroProgress,
-                sphereData.positions
-              )
+          const newPositionArray = Array(13).fill([])
+          data[sectionIndex].spheresData.forEach((sphereData, i) => {
+            const newPosition = interpolateVectors(
+              progress,
+              sphereData.positions
+            )
 
-              newPositionArray[i] = newPosition
-            })
+            newPositionArray[i] = newPosition
+          })
 
-            positionsRef.current = newPositionArray
-          } else {
-            // benefit-0
-            const heroProgress = (self.progress - 0.5) * 2
-            const newPositionArray = Array(13).fill([])
-            data[2].spheresData.forEach((sphereData, i) => {
-              const newPosition = interpolateVectors(
-                heroProgress,
-                sphereData.positions
-              )
-
-              newPositionArray[i] = newPosition
-            })
-
-            positionsRef.current = newPositionArray
-          }
+          positionsRef.current = newPositionArray
         },
       },
     })
