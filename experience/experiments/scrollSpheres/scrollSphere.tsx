@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import {
   Color,
   Mesh,
@@ -11,10 +11,11 @@ type Props = {
   geometry: SphereGeometry
 }
 
-const ScrollSphere = forwardRef<Mesh, Props>((props, ref) => {
+const ScrollSphere = forwardRef<any, Props>((props, ref) => {
   const material = useRef(
     new MeshPhysicalMaterial({ metalness: 0, roughness: 1 })
   )
+  const meshRef = useRef<Mesh>(null!)
 
   const materialUniforms = useRef({
     uColor1: { value: new Color(10868839) },
@@ -64,8 +65,20 @@ const ScrollSphere = forwardRef<Mesh, Props>((props, ref) => {
     }
   }, [])
 
+  useImperativeHandle(ref, () => ({
+    updatePosition(position: Vector3) {
+      meshRef.current.position.copy(position)
+    },
+
+    updateScale(x: number, y: number, z: number) {
+      meshRef.current.scale.set(x, y, z)
+    },
+  }))
+
   return (
-    <mesh geometry={props.geometry} material={material.current} ref={ref} />
+    <mesh ref={meshRef} geometry={props.geometry}>
+      <meshBasicMaterial color={(Math.random() * 0xffffff) << 0} />
+    </mesh>
   )
 })
 

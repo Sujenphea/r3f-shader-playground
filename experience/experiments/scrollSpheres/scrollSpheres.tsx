@@ -24,7 +24,7 @@ const ScrollSpheres = () => {
   const geometry = useRef(new SphereGeometry(1, 50, 50))
 
   // refs
-  const spheresRef = useRef<(Mesh | null)[]>(new Array(13).fill(null))
+  const spheresRef = useRef<any[]>(new Array(13).fill(null))
   const groupRef = useRef<Group>(null!)
   const cameraRef = useRef<ThreePerspectiveCamera>(null!)
 
@@ -32,76 +32,72 @@ const ScrollSpheres = () => {
 
   // hooks
   useEffect(() => {
-    // // setup position
-    // data[0].spheresData.forEach((data, i) => {
-    //   spheresRef.current[i].position.copy(data.positions[0])
-    // })
-    // // setup scale
-    // data[0].spheresData.forEach((data, i) => {
-    //   spheresRef.current[i].scale.set(
-    //     data.scales[0],
-    //     data.scales[0],
-    //     data.scales[0]
-    //   )
-    // })
-    // manage scroll
-    // gsap.timeline({
-    //   scrollTrigger: {
-    //     trigger: '.scrollDiv',
-    //     start: '20px top', // 'top top' causes glitch
-    //     end: 'bottom bottom',
-    //     onUpdate: (self) => {
-    //       const sectionIndex = Math.min(Math.trunc(self.progress * 6), 5) // which section
-    //       const progress = (self.progress - sectionIndex * (1 / 6)) * 6 //
-    //       // update position
-    //       data[sectionIndex].spheresData.forEach((sphereData, i) => {
-    //         const newPosition = interpolateVectors(
-    //           progress,
-    //           sphereData.positions
-    //         )
-    //         spheresRef.current[i].position.copy(newPosition)
-    //       })
-    //       // update scale
-    //       data[sectionIndex].spheresData.forEach((sphereData, i) => {
-    //         const newScale = interpolateValues(progress, sphereData.scales)
-    //         spheresRef.current[i].scale.set(newScale, newScale, newScale)
-    //       })
-    //       // update group
-    //       const newGroupRotation = interpolateVectors(
-    //         progress,
-    //         data[sectionIndex].groupsData.rotations
-    //       )
-    //       const newGroupPosition = interpolateVectors(
-    //         progress,
-    //         data[sectionIndex].groupsData.positions
-    //       )
-    //       groupRef.current.rotation.x = newGroupRotation.x
-    //       groupRef.current.rotation.y = newGroupRotation.y
-    //       groupRef.current.rotation.z = newGroupRotation.z
-    //       groupRef.current.position.x = newGroupPosition.x
-    //       groupRef.current.position.y = newGroupPosition.y
-    //       groupRef.current.position.z = newGroupPosition.z
-    //       // update camera
-    //       const newCameraPosition = interpolateVectors(
-    //         progress,
-    //         data[sectionIndex].cameraData.positions
-    //       )
-    //       cameraRef.current.position.x = newCameraPosition.x
-    //       cameraRef.current.position.y = newCameraPosition.y
-    //       cameraRef.current.position.z = newCameraPosition.z
-    //     },
-    //   },
-    // })
-  }, [])
+    // setup position
+    data[0].spheresData.forEach((data, i) => {
+      spheresRef.current[i].updatePosition(data.positions[0])
+    })
 
-  useEffect(() => {
+    // setup scale
+    data[0].spheresData.forEach((data, i) => {
+      spheresRef.current[i].updateScale(
+        data.scales[0],
+        data.scales[0],
+        data.scales[0]
+      )
+    })
+
+    // manage scroll
     gsap.timeline({
       scrollTrigger: {
         trigger: '.scrollDiv',
         start: '20px top', // 'top top' causes glitch
         end: 'bottom bottom',
         onUpdate: (self) => {
-          spheresRef.current[0]!.position.x = 1
+          const sectionIndex = Math.min(Math.trunc(self.progress * 6), 5) // which section
+          const progress = (self.progress - sectionIndex * (1 / 6)) * 6 //
+
+          // update position
+          data[sectionIndex].spheresData.forEach((sphereData, i) => {
+            const newPosition = interpolateVectors(
+              progress,
+              sphereData.positions
+            )
+
+            spheresRef.current[i].updatePosition(newPosition)
+          })
+
+          // update scale
+          data[sectionIndex].spheresData.forEach((sphereData, i) => {
+            const newScale = interpolateValues(progress, sphereData.scales)
+
+            spheresRef.current[i].updateScale(newScale, newScale, newScale)
+          })
+
+          // update group
+          const newGroupRotation = interpolateVectors(
+            progress,
+            data[sectionIndex].groupsData.rotations
+          )
+          const newGroupPosition = interpolateVectors(
+            progress,
+            data[sectionIndex].groupsData.positions
+          )
+          groupRef.current.rotation.x = newGroupRotation.x
+          groupRef.current.rotation.y = newGroupRotation.y
+          groupRef.current.rotation.z = newGroupRotation.z
+
+          groupRef.current.position.x = newGroupPosition.x
+          groupRef.current.position.y = newGroupPosition.y
+          groupRef.current.position.z = newGroupPosition.z
+
+          // update camera
+          const newCameraPosition = interpolateVectors(
+            progress,
+            data[sectionIndex].cameraData.positions
+          )
+          cameraRef.current.position.x = newCameraPosition.x
+          cameraRef.current.position.y = newCameraPosition.y
+          cameraRef.current.position.z = newCameraPosition.z
         },
       },
     })
@@ -109,44 +105,34 @@ const ScrollSpheres = () => {
 
   return (
     <group>
-      {/* <PerspectiveCamera
+      <PerspectiveCamera
         makeDefault
         args={[45, viewport.width / viewport.height, 0.1, 1e4]}
         position={[0, 0, data[0].cameraData.positions[0].z]}
         ref={cameraRef}
-      /> */}
-
-      {/* <group ref={groupRef}>
-        {[...Array(13)].map((_, i) => {
-          return (
-            <mesh
-              ref={(ref) => (spheresRef.current[i] = ref!)}
-              key={'sphere' + i}
-              geometry={geometry.current}
-            >
-              <meshBasicMaterial color={(Math.random() * 0xffffff) << 0} />
-            </mesh>
-          )
-        })}
-      </group> */}
+      />
 
       <ambientLight intensity={0.6} />
       <directionalLight intensity={0.5} position={[20, 20, 30]} />
       <pointLight intensity={0} position={[0, 0, 3]} />
 
-      {/* add to rotation group */}
-      <pointLight
-        color={new Color(9292640)}
-        position={[0, 0, 1]}
-        intensity={0.5}
-      />
+      <group ref={groupRef}>
+        <pointLight
+          color={new Color(9292640)}
+          position={[0, 0, 1]}
+          intensity={0.5}
+        />
 
-      <ScrollSphere
-        geometry={geometry.current}
-        ref={(ref) => {
-          spheresRef.current[0] = ref
-        }}
-      />
+        {[...Array(13)].map((_, i) => {
+          return (
+            <ScrollSphere
+              geometry={geometry.current}
+              ref={(ref) => (spheresRef.current[i] = ref!)}
+              key={'sphere' + i}
+            />
+          )
+        })}
+      </group>
     </group>
   )
 }
