@@ -1,6 +1,13 @@
 import { useEffect, useRef } from 'react'
 
-import { Group, Mesh, SphereGeometry } from 'three'
+import {
+  Group,
+  Mesh,
+  PerspectiveCamera as ThreePerspectiveCamera,
+  SphereGeometry,
+} from 'three'
+import { PerspectiveCamera } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
 
 import data, { interpolateValues, interpolateVectors } from './data'
 
@@ -17,6 +24,9 @@ const ScrollSpheres = () => {
   // refs
   const spheresRef = useRef<Mesh[]>(new Array(13).fill(null))
   const groupRef = useRef<Group>(null!)
+  const cameraRef = useRef<ThreePerspectiveCamera>(null!)
+
+  const { viewport } = useThree()
 
   // hooks
   useEffect(() => {
@@ -79,24 +89,43 @@ const ScrollSpheres = () => {
           groupRef.current.position.x = newGroupPosition.x
           groupRef.current.position.y = newGroupPosition.y
           groupRef.current.position.z = newGroupPosition.z
+
+          // update camera
+          const newCameraPosition = interpolateVectors(
+            progress,
+            data[sectionIndex].cameraData.positions
+          )
+
+          cameraRef.current.position.x = newCameraPosition.x
+          cameraRef.current.position.y = newCameraPosition.y
+          cameraRef.current.position.z = newCameraPosition.z
         },
       },
     })
   }, [])
 
   return (
-    <group ref={groupRef}>
-      {[...Array(13)].map((_, i) => {
-        return (
-          <mesh
-            ref={(ref) => (spheresRef.current[i] = ref!)}
-            key={'sphere' + i}
-            geometry={geometry.current}
-          >
-            <meshBasicMaterial color={(Math.random() * 0xffffff) << 0} />
-          </mesh>
-        )
-      })}
+    <group>
+      <PerspectiveCamera
+        makeDefault
+        args={[45, viewport.width / viewport.height, 0.1, 1e4]}
+        position={[0, 0, data[0].cameraData.positions[0].z]}
+        ref={cameraRef}
+      />
+
+      <group ref={groupRef}>
+        {[...Array(13)].map((_, i) => {
+          return (
+            <mesh
+              ref={(ref) => (spheresRef.current[i] = ref!)}
+              key={'sphere' + i}
+              geometry={geometry.current}
+            >
+              <meshBasicMaterial color={(Math.random() * 0xffffff) << 0} />
+            </mesh>
+          )
+        })}
+      </group>
     </group>
   )
 }
