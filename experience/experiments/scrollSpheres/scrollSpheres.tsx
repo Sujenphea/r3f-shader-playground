@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-import { Group, Mesh, SphereGeometry, Vector3 } from 'three'
-import { useFrame } from '@react-three/fiber'
+import { Group, Mesh, SphereGeometry } from 'three'
 
 import data, { interpolateValues, interpolateVectors } from './data'
 
@@ -18,23 +17,22 @@ const ScrollSpheres = () => {
   // refs
   const spheresRef = useRef<Mesh[]>(new Array(13).fill(null))
   const groupRef = useRef<Group>(null!)
-  const positionsRef = useRef<Vector3[]>([])
-  const scalesRef = useRef<number[]>([])
 
   // hooks
   useEffect(() => {
-    // setup values
-    const positionArray = Array(13).fill([])
+    // setup position
     data[0].spheresData.forEach((data, i) => {
-      positionArray[i] = data.positions[0]
+      spheresRef.current[i].position.copy(data.positions[0])
     })
-    positionsRef.current = positionArray
 
-    const scaleArray = Array(13).fill([])
+    // setup scale
     data[0].spheresData.forEach((data, i) => {
-      scaleArray[i] = data.scales[0]
+      spheresRef.current[i].scale.set(
+        data.scales[0],
+        data.scales[0],
+        data.scales[0]
+      )
     })
-    scalesRef.current = scaleArray
 
     // manage scroll
     gsap.timeline({
@@ -54,14 +52,14 @@ const ScrollSpheres = () => {
               sphereData.positions
             )
 
-            positionsRef.current[i] = newPosition
+            spheresRef.current[i].position.copy(newPosition)
           })
 
           // update scale
           data[sectionIndex].spheresData.forEach((sphereData, i) => {
             const newScale = interpolateValues(progress, sphereData.scales)
 
-            scalesRef.current[i] = newScale
+            spheresRef.current[i].scale.set(newScale, newScale, newScale)
           })
 
           // update group
@@ -85,17 +83,6 @@ const ScrollSpheres = () => {
       },
     })
   }, [])
-
-  // tick: update sphere position, scale + group
-  useFrame(() => {
-    positionsRef.current.forEach((position, i) => {
-      spheresRef.current[i].position.copy(position)
-    })
-
-    scalesRef.current.forEach((scale, i) => {
-      spheresRef.current[i].scale.set(scale, scale, scale)
-    })
-  })
 
   return (
     <group ref={groupRef}>
