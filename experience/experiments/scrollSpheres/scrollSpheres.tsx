@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 import {
+  Color,
   Group,
   Mesh,
   PerspectiveCamera as ThreePerspectiveCamera,
@@ -128,6 +129,17 @@ const ScrollSpheres = () => {
           )
         })}
       </group> */}
+
+      <ambientLight intensity={0.6} />
+      <directionalLight intensity={0.5} position={[20, 20, 30]} />
+      <pointLight intensity={0} position={[0, 0, 3]} />
+
+      {/* add to rotation group */}
+      <pointLight
+        color={new Color(9292640)}
+        position={[0, 0, 1]}
+        intensity={0.5}
+      />
 
       <ScrollSphere
         geometry={geometry.current}
